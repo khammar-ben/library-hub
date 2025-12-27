@@ -48,13 +48,17 @@ function AppRoutes() {
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
         
-        {/* Admin Routes */}
+        {/* Books Route - Different page based on role */}
         <Route
           path="books"
           element={
-            <ProtectedRoute allowedRoles={['ADMIN']}>
+            user?.role === 'ADMIN' ? (
               <BooksPage />
-            </ProtectedRoute>
+            ) : user?.role === 'CLIENT' ? (
+              <ClientBooksPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
           }
         />
         <Route
@@ -81,14 +85,6 @@ function AppRoutes() {
             <ProtectedRoute allowedRoles={['RESPONSABLE']}>
               <EmpruntsPage />
             </ProtectedRoute>
-          }
-        />
-        
-        {/* Client Routes */}
-        <Route
-          path="books"
-          element={
-            user?.role === 'CLIENT' ? <ClientBooksPage /> : <Navigate to="/dashboard" replace />
           }
         />
         <Route
